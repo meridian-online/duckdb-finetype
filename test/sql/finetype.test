@@ -1,0 +1,115 @@
+# name: test/sql/finetype.test
+# description: test finetype extension
+# group: [finetype]
+
+# Before we load the extension, this will fail
+statement error
+SELECT finetype('hello');
+----
+Catalog Error: Scalar Function with name finetype does not exist!
+
+# Require statement will ensure the extension is loaded from now on
+require finetype
+
+# Test finetype_version() returns a version string
+query I
+SELECT finetype_version() LIKE 'finetype %';
+----
+true
+
+# Test finetype() classifies a URL/URI
+query I
+SELECT finetype('https://example.com');
+----
+technology.internet.uri
+
+# Test finetype() classifies an email
+query I
+SELECT finetype('user@example.com');
+----
+identity.person.email
+
+# Test finetype() classifies an ISO date
+query I
+SELECT finetype('2024-01-15');
+----
+datetime.date.iso
+
+# Test finetype() classifies a UUID
+query I
+SELECT finetype('550e8400-e29b-41d4-a716-446655440000');
+----
+technology.cryptographic.uuid
+
+# Test finetype() classifies a boolean
+query I
+SELECT finetype('true');
+----
+technology.development.boolean
+
+# Test finetype() classifies an IPv4 address
+query I
+SELECT finetype('192.168.1.1');
+----
+technology.internet.ip_v4
+
+# Test finetype() handles NULL input
+query I
+SELECT finetype(NULL);
+----
+NULL
+
+# Test finetype() handles empty string
+query I
+SELECT finetype('');
+----
+unknown
+
+# Test finetype_detail() returns JSON with type info
+query I
+SELECT finetype_detail('192.168.1.1') LIKE '%technology.internet.ip_v4%';
+----
+true
+
+# Test finetype_detail() includes duckdb_type
+query I
+SELECT finetype_detail('192.168.1.1') LIKE '%INET%';
+----
+true
+
+# Test finetype_cast() passes through a UUID (lowercase is already detected as uuid)
+query I
+SELECT finetype_cast('550e8400-e29b-41d4-a716-446655440000');
+----
+550e8400-e29b-41d4-a716-446655440000
+
+# Test finetype_cast() normalizes a boolean
+query I
+SELECT finetype_cast('true');
+----
+true
+
+# Test finetype_unpack() with a JSON object
+query I
+SELECT finetype_unpack('{"email": "user@test.com"}') LIKE '%identity.person.email%';
+----
+true
+
+# Test finetype_unpack() with non-JSON returns NULL
+query I
+SELECT finetype_unpack('not json');
+----
+NULL
+
+# Test batch classification with table
+statement ok
+CREATE TABLE test_data AS SELECT * FROM (
+    VALUES ('user@test.com'), ('2024-01-15'), ('true')
+) AS t(value);
+
+query II
+SELECT value, finetype(value) FROM test_data ORDER BY value;
+----
+2024-01-15	datetime.date.iso
+true	technology.development.boolean
+user@test.com	identity.person.email

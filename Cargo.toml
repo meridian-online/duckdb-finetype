@@ -1,0 +1,26 @@
+[package]
+name = "finetype"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "DuckDB extension for semantic type classification powered by FineType"
+repository = "https://github.com/noon-org/duckdb-finetype"
+homepage = "https://noon.sh/projects/finetype/"
+
+[lib]
+crate-type = ["cdylib"]
+
+[features]
+default = ["embed-models"]
+embed-models = []
+
+[profile.release]
+lto = true
+strip = true
+
+[dependencies]
+duckdb = { version = "=1.4.4", features = ["loadable-extension", "vscalar"] }
+libduckdb-sys = { version = "=1.4.4", features = ["loadable-extension"] }
+finetype-core = "0.1.0"
+finetype-model = "0.1.0"
+serde_json = "1"
