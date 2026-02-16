@@ -42,10 +42,21 @@ SELECT finetype_detail('192.168.1.1');
 
 Normalize a value for safe `TRY_CAST()` to its detected DuckDB type.
 
-```sql
-SELECT finetype_cast('01/15/2024');
--- 2024-01-15  (US date → ISO)
+Returns `VARCHAR` intentionally — a single SQL function can't return different types (DATE, INET, BOOLEAN) for different inputs. Use the two-step pattern: `finetype_cast` normalizes, then `TRY_CAST` converts:
 
+```sql
+-- Step 1: finetype_cast normalizes the string
+SELECT finetype_cast('01/15/2024');
+-- 2024-01-15  (US date → ISO format, still VARCHAR)
+
+-- Step 2: TRY_CAST converts to the native DuckDB type
+SELECT TRY_CAST(finetype_cast('01/15/2024') AS DATE);
+-- 2024-01-15  (DATE type)
+```
+
+More examples:
+
+```sql
 SELECT finetype_cast('Yes');
 -- true  (boolean normalization)
 
