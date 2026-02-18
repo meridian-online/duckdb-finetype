@@ -22,6 +22,7 @@ pub fn normalize(value: &str, label: &str) -> Option<String> {
         ("technology", "development") if label == "technology.development.boolean" => {
             normalize_boolean(value)
         }
+        ("representation", "boolean") => normalize_boolean(value),
         ("technology", "cryptographic") if label == "technology.cryptographic.uuid" => {
             normalize_uuid(value)
         }

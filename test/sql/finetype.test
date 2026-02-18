@@ -17,11 +17,11 @@ SELECT finetype_version() LIKE 'finetype %';
 ----
 true
 
-# Test finetype() classifies a URL/URI
+# Test finetype() classifies a URL
 query I
 SELECT finetype('https://example.com');
 ----
-technology.internet.uri
+technology.internet.url
 
 # Test finetype() classifies an email
 query I
@@ -45,7 +45,7 @@ technology.cryptographic.uuid
 query I
 SELECT finetype('true');
 ----
-technology.development.boolean
+representation.boolean.terms
 
 # Test finetype() classifies an IPv4 address
 query I
@@ -91,7 +91,7 @@ true
 
 # Test finetype_unpack() with a JSON object
 query I
-SELECT finetype_unpack('{"email": "user@test.com"}') LIKE '%identity.person.email%';
+SELECT finetype_unpack('{"email": "user@example.com"}') LIKE '%identity.person.email%';
 ----
 true
 
@@ -104,12 +104,12 @@ NULL
 # Test batch classification with table
 statement ok
 CREATE TABLE test_data AS SELECT * FROM (
-    VALUES ('user@test.com'), ('2024-01-15'), ('true')
+    VALUES ('user@example.com'), ('2024-01-15'), ('true')
 ) AS t(value);
 
 query II
 SELECT value, finetype(value) FROM test_data ORDER BY value;
 ----
 2024-01-15	datetime.date.iso
-true	technology.development.boolean
-user@test.com	identity.person.email
+true	representation.boolean.terms
+user@example.com	identity.person.email

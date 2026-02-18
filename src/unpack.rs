@@ -4,7 +4,7 @@
 //! with per-field type information.
 
 use crate::type_mapping;
-use finetype_model::CharClassifier;
+use finetype_model::ValueClassifier;
 use serde_json::{Map, Value};
 
 /// Unpack a JSON string: classify each scalar field and return annotated JSON.
@@ -17,14 +17,14 @@ use serde_json::{Map, Value};
 ///
 /// Nested objects are recursively unpacked. Arrays have each element annotated.
 /// Non-JSON input returns None.
-pub fn unpack_json(input: &str, classifier: &CharClassifier) -> Option<String> {
+pub fn unpack_json(input: &str, classifier: &dyn ValueClassifier) -> Option<String> {
     let parsed: Value = serde_json::from_str(input.trim()).ok()?;
     let annotated = annotate_value(&parsed, classifier);
     serde_json::to_string(&annotated).ok()
 }
 
 /// Recursively annotate a JSON value with type information.
-fn annotate_value(value: &Value, classifier: &CharClassifier) -> Value {
+fn annotate_value(value: &Value, classifier: &dyn ValueClassifier) -> Value {
     match value {
         Value::Object(map) => {
             let mut result = Map::new();
@@ -68,7 +68,7 @@ fn annotate_value(value: &Value, classifier: &CharClassifier) -> Value {
 }
 
 /// Classify a string value and return an annotation object.
-fn classify_and_annotate(value: &str, classifier: &CharClassifier) -> Value {
+fn classify_and_annotate(value: &str, classifier: &dyn ValueClassifier) -> Value {
     let mut anno = Map::new();
     anno.insert("value".to_string(), Value::String(value.to_string()));
 

@@ -40,21 +40,24 @@ const EXTENSION_VERSION: &str = env!("CARGO_PKG_VERSION");
 #[cfg(feature = "embed-models")]
 use std::sync::OnceLock;
 
-/// Global flat classifier, initialized on first finetype() call.
-/// Uses the single-pass CharCNN model (91.97% accuracy, ~100x faster than tiered).
+/// Global tiered classifier, initialized on first finetype() call.
+/// Uses the hierarchical CharCNN model (72.6% label accuracy on format-detectable types).
 #[cfg(feature = "embed-models")]
-static CLASSIFIER: OnceLock<finetype_model::CharClassifier> = OnceLock::new();
+static CLASSIFIER: OnceLock<finetype_model::TieredClassifier> = OnceLock::new();
 
-/// Initialize or get the global classifier from embedded flat model.
+/// Initialize or get the global classifier from embedded tiered model.
 #[cfg(feature = "embed-models")]
-fn get_classifier() -> &'static finetype_model::CharClassifier {
+fn get_classifier() -> &'static finetype_model::TieredClassifier {
     CLASSIFIER.get_or_init(|| {
-        finetype_model::CharClassifier::from_bytes(
-            embedded::FLAT_WEIGHTS,
-            embedded::FLAT_LABELS,
-            embedded::FLAT_CONFIG,
-        )
-        .expect("Failed to load embedded flat model")
+        if embedded::EMBEDDED_MODEL_TYPE == "tiered" {
+            finetype_model::TieredClassifier::from_embedded(
+                embedded::TIER_GRAPH,
+                embedded::get_tiered_model_data,
+            )
+            .expect("Failed to load embedded tiered model")
+        } else {
+            panic!("Expected tiered model but found flat model embedded")
+        }
     })
 }
 

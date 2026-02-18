@@ -1,6 +1,6 @@
 [package]
 name = "finetype"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 license = "MIT"
 description = "DuckDB extension for semantic type classification powered by FineType"
@@ -21,6 +21,6 @@ strip = true
 [dependencies]
 duckdb = { version = "=1.4.4", features = ["loadable-extension", "vscalar"] }
 libduckdb-sys = { version = "=1.4.4", features = ["loadable-extension"] }
-finetype-core = "0.1.0"
-finetype-model = "0.1.0"
+finetype-core = "0.1.7"
+finetype-model = "0.1.7"
 serde_json = "1"

@@ -111,7 +111,8 @@ pub fn to_duckdb_type(label: &str) -> &'static str {
         | "technology.code.issn"
         | "technology.code.imei"
         | "technology.code.locale_code"
-        | "technology.code.pin" => "VARCHAR",
+        | "technology.code.pin"
+        | "technology.code.doi" => "VARCHAR",
 
         // ── geography.coordinate ───────────────────────────────────────
         "geography.coordinate.latitude" | "geography.coordinate.longitude" => "DOUBLE",
@@ -155,6 +156,11 @@ pub fn to_duckdb_type(label: &str) -> &'static str {
         // ── identity.academic ──────────────────────────────────────────
         "identity.academic.degree" | "identity.academic.university" => "VARCHAR",
 
+        // ── identity.medical ─────────────────────────────────────────
+        "identity.medical.dea_number"
+        | "identity.medical.ndc"
+        | "identity.medical.npi" => "VARCHAR",
+
         // ── identity.payment ───────────────────────────────────────────
         "identity.payment.credit_card_number"
         | "identity.payment.credit_card_network"
@@ -162,13 +168,33 @@ pub fn to_duckdb_type(label: &str) -> &'static str {
         | "identity.payment.cvv"
         | "identity.payment.bitcoin_address"
         | "identity.payment.ethereum_address"
-        | "identity.payment.paypal_email" => "VARCHAR",
+        | "identity.payment.paypal_email"
+        | "identity.payment.currency_code"
+        | "identity.payment.currency_symbol"
+        | "identity.payment.cusip"
+        | "identity.payment.isin"
+        | "identity.payment.lei"
+        | "identity.payment.sedol"
+        | "identity.payment.swift_bic" => "VARCHAR",
+
+        // ── representation.boolean ───────────────────────────────────
+        "representation.boolean.binary"
+        | "representation.boolean.initials"
+        | "representation.boolean.terms" => "BOOLEAN",
+
+        // ── representation.discrete ──────────────────────────────────
+        "representation.discrete.categorical"
+        | "representation.discrete.ordinal" => "VARCHAR",
+
+        // ── representation.code ──────────────────────────────────────
+        "representation.code.alphanumeric_id" => "VARCHAR",
 
         // ── representation.numeric ─────────────────────────────────────
         "representation.numeric.integer_number" | "representation.numeric.increment" => "BIGINT",
         "representation.numeric.decimal_number"
         | "representation.numeric.percentage"
-        | "representation.numeric.scientific_notation" => "DOUBLE",
+        | "representation.numeric.scientific_notation"
+        | "representation.numeric.si_number" => "DOUBLE",
 
         // ── representation.text ────────────────────────────────────────
         "representation.text.word"
@@ -180,7 +206,9 @@ pub fn to_duckdb_type(label: &str) -> &'static str {
 
         // ── representation.file ────────────────────────────────────────
         "representation.file.file_size" => "BIGINT",
-        "representation.file.extension" | "representation.file.mime_type" => "VARCHAR",
+        "representation.file.extension"
+        | "representation.file.mime_type"
+        | "representation.file.excel_format" => "VARCHAR",
 
         // ── representation.scientific ──────────────────────────────────
         "representation.scientific.dna_sequence"
