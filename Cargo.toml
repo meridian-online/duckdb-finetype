@@ -4,8 +4,8 @@ version = "0.2.0"
 edition = "2021"
 license = "MIT"
 description = "DuckDB extension for semantic type classification powered by FineType"
-repository = "https://github.com/noon-org/duckdb-finetype"
-homepage = "https://noon.sh/projects/finetype/"
+repository = "https://github.com/meridian-online/duckdb-finetype"
+homepage = "https://meridian.online/projects/finetype/"
 
 [lib]
 crate-type = ["cdylib"]

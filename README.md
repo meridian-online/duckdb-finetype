@@ -1,6 +1,6 @@
 # DuckDB FineType Extension
 
-A DuckDB extension for semantic type classification powered by [FineType](https://github.com/noon-org/finetype) — a tiered CharCNN model that detects 168 semantic types from raw string values.
+A DuckDB extension for semantic type classification powered by [FineType](https://github.com/meridian-online/finetype) — a tiered CharCNN model that detects 168 semantic types from raw string values.
 
 ## Installation
 
@@ -98,7 +98,7 @@ FineType classifies values into a three-level taxonomy: `domain.category.type`
 | **representation** | boolean, discrete, code, numeric, text, file, scientific | `representation.numeric.decimal_number`, `representation.boolean.terms` |
 | **container** | object, array, key_value | `container.object.json`, `container.array.comma_separated` |
 
-See the [full type list](https://github.com/noon-org/finetype#type-taxonomy) for all 168 types.
+See the [full type list](https://github.com/meridian-online/finetype#type-taxonomy) for all 168 types.
 
 ## DuckDB Type Mapping
 
@@ -146,7 +146,7 @@ FROM raw_data;
 ## Building from Source
 
 ```bash
-git clone --recurse-submodules https://github.com/noon-org/duckdb-finetype
+git clone --recurse-submodules https://github.com/meridian-online/duckdb-finetype
 cd duckdb-finetype
 make configure release
 ```
