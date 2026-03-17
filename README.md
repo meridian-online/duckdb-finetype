@@ -1,6 +1,6 @@
 # DuckDB FineType Extension
 
-A DuckDB extension for semantic type classification powered by [FineType](https://github.com/meridian-online/finetype) — a tiered CharCNN model that detects 168 semantic types from raw string values.
+A DuckDB extension for semantic type classification powered by [FineType](https://github.com/meridian-online/finetype) — a tiered CharCNN model that detects 250 semantic types from raw string values.
 
 ## Installation
 
@@ -13,7 +13,7 @@ LOAD finetype;
 
 ### `finetype(value VARCHAR) → VARCHAR`
 
-Classify a single value into one of 168 semantic types.
+Classify a single value into one of 250 semantic types.
 
 ```sql
 SELECT finetype('https://example.com');
@@ -91,14 +91,15 @@ FineType classifies values into a three-level taxonomy: `domain.category.type`
 
 | Domain | Categories | Example Types |
 |---|---|---|
+| **container** | object, array, key_value | `container.object.json`, `container.array.comma_separated` |
 | **datetime** | date, time, timestamp, epoch, duration, component, offset | `datetime.date.iso`, `datetime.timestamp.rfc_3339` |
-| **technology** | internet, cryptographic, development, hardware, code | `technology.internet.url`, `technology.cryptographic.uuid` |
+| **finance** | currency, accounting, market, transaction | `finance.currency.iso_code`, `finance.market.ticker` |
 | **geography** | coordinate, location, address, contact, transportation | `geography.location.country`, `geography.coordinate.latitude` |
 | **identity** | person, academic, medical, payment | `identity.person.email`, `identity.payment.credit_card_number` |
 | **representation** | boolean, discrete, code, numeric, text, file, scientific | `representation.numeric.decimal_number`, `representation.boolean.terms` |
-| **container** | object, array, key_value | `container.object.json`, `container.array.comma_separated` |
+| **technology** | internet, cryptographic, development, hardware, code | `technology.internet.url`, `technology.cryptographic.uuid` |
 
-See the [full type list](https://github.com/meridian-online/finetype#type-taxonomy) for all 168 types.
+See the [full type list](https://github.com/meridian-online/finetype#type-taxonomy) for all 250 types.
 
 ## DuckDB Type Mapping
 
